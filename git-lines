@@ -1,0 +1,15 @@
+#!/bin/bash
+# This script counts the amount of lines in a git repository
+
+RED='\033[1;31m'
+NC='\033[0m'
+OUTPUT="$(git diff --stat `git hash-object -t tree /dev/null` | tail -n 1)"
+FILES="$(echo $OUTPUT | grep -oP "\d+" | head -1)"
+LINES="$(echo $OUTPUT | grep -oP "\d+" | tail -1)"
+if [[ $FILES != "" ]]; then
+  echo -e "This repository has ${RED}${FILES}${NC} files, together they consist of ${RED}${LINES}${NC} lines of code"
+  exit 0
+else
+  echo "ERROR: Could not get the amount of lines"
+  exit 1
+fi

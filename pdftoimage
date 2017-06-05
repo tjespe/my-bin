@@ -1,0 +1,3 @@
+#!/bin/bash
+convert -density 250 "$1" -quality 250 "$1.png"
+fbi "$1"*.png

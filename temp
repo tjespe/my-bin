@@ -1,0 +1,6 @@
+#!/bin/bash
+function get_temp () {
+  sensors | grep Core | grep -o "+[[:digit:]]\{2\}\.[[:digit:]]°C" | tail -1
+}
+
+get_temp 2> /dev/null

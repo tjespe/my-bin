@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ -d "/sys/class/backlight/intel_backlight" ]; then
+  DIR="/sys/class/backlight/intel_backlight"
+else
+  DIR="/sys/devices/platform/applesmc.768/leds/smc::kbd_backlight"
+fi
+PERCENT=$(( $1 ))
+MAX=`cat $DIR/max_brightness`
+NEW=$( awk "BEGIN { pc=${PERCENT}/100; i=int(pc); n=pc*${MAX}; rounded = sprintf(\"%.0f\", n); print rounded }" )
+sudo sh -c "echo $NEW > $DIR/brightness" /usr/local/bin/set-brightness

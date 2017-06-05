@@ -1,0 +1,2 @@
+#!/bin/bash
+who | grep tty7 | grep -o "^\S\+"

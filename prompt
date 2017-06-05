@@ -1,0 +1,19 @@
+#!/bin/bash
+
+CORRECT_SUM="6c40a5c35fd424286358cb02a1f61b4a1bf9d8a2faf8579c783ea542918f4c95"
+
+if [ -e /tmp/password ]; then
+  SHASUM=`cat /tmp/password | sha256sum | grep -o "\S\+" | head -1`
+  if [[ $SHASUM = $CORRECT_SUM ]];then
+    $@
+    exit 0
+  fi
+fi
+
+PASS=`zenity --password`
+SHASUM=`echo $PASS | sha256sum | grep -o "\S\+" | head -1`
+if [[ $SHASUM = $CORRECT_SUM ]]; then
+  echo $PASS > /tmp/password
+  $@
+  rm /tmp/password
+fi
