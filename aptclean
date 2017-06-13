@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo apt autoremove
+sudo apt clean
+sudo apt autoclean
+sudo aptitude clean
+sudo aptitude autoclean
+sudo aptitude autoremove
