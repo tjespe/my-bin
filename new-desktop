@@ -1,0 +1,18 @@
+#!/bin/bash
+
+read "Name:"
+TITLE=$REPLY
+read "Icon URI:"
+ICON=$REPLY
+read "Command to execute:"
+EXEC=$REPLY
+
+echo "
+[Desktop Entry]
+Type=Application
+Terminal=false
+Icon=$ICON
+Name=$NAME
+Exec=$EXEC
+Categories=Utility;
+"
