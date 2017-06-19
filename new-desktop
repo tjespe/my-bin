@@ -1,11 +1,11 @@
 #!/bin/bash
 
-read "Name:"
-TITLE=$REPLY
-read "Icon URI:"
-ICON=$REPLY
-read "Command to execute:"
-EXEC=$REPLY
+echo "Name:"
+read NAME
+echo "Icon:"
+read ICON
+echo "Command to execute:"
+read EXEC
 
 echo "
 [Desktop Entry]
