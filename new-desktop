@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "Name:"
+echo -n "Name:  "
 read NAME
-echo "Icon:"
+echo -n "Icon:  "
 read ICON
-echo "Command to execute:"
+echo -n "Command to execute:  "
 read EXEC
 
 echo "
