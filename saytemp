@@ -1,3 +1,3 @@
 #!/bin/bash
 
-say "`temp`elsius"
+spd-say "`temp`elsius"
