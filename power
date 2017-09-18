@@ -1,3 +1,7 @@
 #!/bin/bash
 
-echo "`cat /sys/class/power_supply/BAT*/capacity` %	(`cat /sys/class/power_supply/BAT*/status`)"
+if [ `uname` = "Linux" ]; then
+  echo "`cat /sys/class/power_supply/BAT*/capacity` %	(`cat /sys/class/power_supply/BAT*/status`)"
+elif [ `uname` = "Darwin" ]; then
+  pmset -g batt
+fi
