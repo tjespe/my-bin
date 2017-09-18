@@ -1,2 +1,6 @@
 #!/bin/bash
-pactl set-sink-volume 0 "$1"%
+if [ `uname` = "Linux" ]; then
+  pactl set-sink-volume 0 "$1"%
+elif [ `uname` = "Darwin" ]; then
+  osascript -e "set volume output volume $1"
+fi
