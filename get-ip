@@ -1,0 +1,1 @@
+ifconfig | grep "^w" -A 1 | tail -1 | grep -o "inet \S\+" | grep -o "\S\+\$"

@@ -1,0 +1,12 @@
+#!/bin/bash
+spd-say "People think its funny, but its really hot and runny"
+sleep 1
+spd-say "Diarrhea"
+sleep 1
+spd-say "Diarrhea"
+sleep 3
+spd-say "People think its gross, but its really good on toast"
+sleep 1
+spd-say "Diarrhea"
+sleep 1
+spd-say "Diarrhea"
