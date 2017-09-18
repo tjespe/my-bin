@@ -4,8 +4,13 @@
 RED='\033[1;31m'
 NC='\033[0m'
 OUTPUT="$(git diff --stat `git hash-object -t tree /dev/null` | tail -n 1)"
-FILES="$(echo $OUTPUT | grep -oP "\d+" | head -1)"
-LINES="$(echo $OUTPUT | grep -oP "\d+" | tail -1)"
+if [ `uname` = "Darwin" ]; then
+  FILES="$(echo $OUTPUT | grep -o "\d\+" | head -1)"
+  LINES="$(echo $OUTPUT | grep -o "\d\+" | tail -1)"
+else
+  FILES="$(echo $OUTPUT | grep -oP "\d+" | head -1)"
+  LINES="$(echo $OUTPUT | grep -oP "\d+" | tail -1)"
+fi
 if [[ $FILES != "" ]]; then
   echo -e "This repository has ${RED}${FILES}${NC} files, together they consist of ${RED}${LINES}${NC} lines of code"
   exit 0
