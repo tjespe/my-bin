@@ -1,17 +1,23 @@
 #!/bin/zsh
 if [[ `uname` = "Linux" ]]; then
   alias say="spd-say"
+  SHORT_BREAK="2"
+  SHORT_AFTER_LONG_BREAK="4"
+  LONG_BREAK="3"
 elif [[ `uname` = "Darwin" ]]; then
   alias say="say -v Alex"
+  SHORT_BREAK="1"
+  SHORT_AFTER_LONG_BREAK="1"
+  LONG_BREAK="3"
 fi
-say "People think its funny, but its really hot and runny"
-sleep 1
+say "People think its funny but its really hot and runny"
+sleep $SHORT_AFTER_LONG_BREAK
 say "Diarrhea"
-sleep 1
+sleep $SHORT_BREAK
 say "Diarrhea"
-sleep 3
-say "People think its gross, but its really good on toast"
-sleep 1
+sleep $LONG_BREAK
+say "People think its gross but its really good on toast"
+sleep $SHORT_AFTER_LONG_BREAK
 say "Diarrhea"
-sleep 1
+sleep $SHORT_BREAK
 say "Diarrhea"
