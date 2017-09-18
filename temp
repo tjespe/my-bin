@@ -1,6 +1,8 @@
 #!/bin/bash
-function get_temp () {
-  sensors | grep Core | grep -o "+[[:digit:]]\{2\}\.[[:digit:]]°C" | tail -1
-}
-
-get_temp 2> /dev/null
+if [ `uname` = "Linux" ]; then
+  command -v sensors >/dev/null 2>&1 || { echo >&2 "The program \`sensors\` is required. It is part of the \`lm-sensors\` package available in Ubuntu.  Aborting."; exit 1; }
+  sensors | grep Core | grep -o "+[[:digit:]]\{2\}\.[[:digit:]]°C" | tail -1 2> /dev/null
+else
+  echo "It does not look like your OS is supported"
+  exit 1
+fi
