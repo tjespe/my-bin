@@ -1,3 +1,5 @@
 #!/bin/bash
+command -v convert >/dev/null 2>&1 || { echo >&2 "This script require \`convert\` but it's not installed. If you are on Ubuntu, install it by typing \`sudo apt install imagemagick\`."; exit 1; }
+command -v fbi >/dev/null 2>&1 || { echo >&2 "This script require \`fbi\` but it's not installed. If you are on Ubuntu, install it by typing \`sudo apt install fbi\`."; exit 1; }
 convert -density 250 "$1" -quality 250 "$1.png"
 fbi "$1"*.png
