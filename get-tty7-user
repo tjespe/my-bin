@@ -1,2 +1,2 @@
 #!/bin/bash
-who | grep tty7 | grep -o "^\S\+"
+who | grep tty7 | grep -o "^\S\+" || echo "No user on TTY7"
