@@ -1,12 +1,17 @@
-#!/bin/bash
-spd-say "People think its funny, but its really hot and runny"
+#!/bin/zsh
+if [[ `uname` = "Linux" ]]; then
+  alias say="spd-say"
+elif [[ `uname` = "Darwin" ]]; then
+  alias say="say -v Alex"
+fi
+say "People think its funny, but its really hot and runny"
 sleep 1
-spd-say "Diarrhea"
+say "Diarrhea"
 sleep 1
-spd-say "Diarrhea"
+say "Diarrhea"
 sleep 3
-spd-say "People think its gross, but its really good on toast"
+say "People think its gross, but its really good on toast"
 sleep 1
-spd-say "Diarrhea"
+say "Diarrhea"
 sleep 1
-spd-say "Diarrhea"
+say "Diarrhea"
