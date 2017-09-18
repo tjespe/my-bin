@@ -1,1 +1,5 @@
+#!/bin/bash
+# For Linux:
 ifconfig | grep "^w" -A 1 | tail -1 | grep -o "inet \S\+" | grep -o "\S\+\$"
+# For macOS:
+ifconfig | grep "^en[01]:" -A 4 | grep -o "inet \S\+" | grep -o "\S\+\$"
