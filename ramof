@@ -1,4 +1,8 @@
 #!/bin/bash
 # This script prints the memory used by the process with the pid provided as first argument to this script
 
-echo $(($(ps $1 -O '' -O rss | tail -1 | grep -o "\d\+$")/1024)) MB
+if [ `uname` = "Darwin" ]; then
+  echo $(($(ps $1 -O '' -O rss | tail -1 | grep -o "\d\+$")/1024)) MB
+else
+  echo "It does not look like your OS is supported"
+fi
