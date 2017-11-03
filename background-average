@@ -1,0 +1,3 @@
+#!/bin/bash
+# Calculate average color of background
+URL=$(gsettings get org.gnome.desktop.background picture-uri | tr -d "'") && curl -s $URL | convert - -colorspace CMYK -colors 1 -depth 8 txt: | head -2 | tail -1 | awk -F "#" '{OP=1.2; printf "#%X%X%X", (strtonum("0x"substr($2, 0, 2))*OP)<255?(strtonum("0x"substr($2, 0, 2))*OP):255, (strtonum("0x"substr($2, 3, 2))*OP)<255?(strtonum("0x"substr($2, 3, 2))*OP):255, (strtonum("0x"substr($2, 5, 2))*OP)<255?(strtonum("0x"substr($2, 5, 2))*OP):255}'
