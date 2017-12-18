@@ -10,9 +10,10 @@ def i_to_c(i):
 def c_to_i(c):
     return (c in string.ascii_uppercase and string.ascii_uppercase.index(c)) or (c in string.ascii_lowercase and string.ascii_lowercase.index(c)) or 0
 
-# Record voice
+# Clear terminal and start clock
 clear()
 start = time.time()
+# Record voice
 if shutil.which("arecord"):
     rec_proc = subprocess.Popen(["arecord", "-f", "cd"], stdout=open(".lyd.wav", "w"), stderr=open("/dev/null"))
 elif shutil.which("sox"):
@@ -46,12 +47,16 @@ class dummy_zone():
         server_proc.terminate()
         os.remove(".lyd.wav")
         quit()
+    volume = 0
 print(i_to_c(len(zones))+":   Ikke spill av likevel")
 zones.append(dummy_zone())
 zone = zones[c_to_i(input("\nSkriv bokstaven til ønsket sone: "))]
+old_vol = zone.volume
+zone.volume = 85
 zone.play_uri("http://"+ip+":8318/.lyd.wav")
 
 # Wait some seconds and terminate webserver
 time.sleep(recording_length+2)
+zone.volume = old_vol
 server_proc.terminate()
 os.remove(".lyd.wav")
