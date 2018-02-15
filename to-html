@@ -1,7 +1,10 @@
-#!/bin/bash
-echo "<table>"
-while read line
-do
-  echo "$line" | column -t | awk 'BEGIN{print "  <tr>"} {for(i=1;i<=NF;i++)print "    <td>" $i"</td>"} END{print "  </tr>"}'
-done < "${1:-/dev/stdin}"
-echo "</table>"
+#!/usr/bin/python3
+import fileinput, re
+
+print("<table>")
+for line in fileinput.input():
+    print(" <tr>")
+    for col in re.compile("(  |	|: )").split(line.strip()):
+        print("     <td>"+col+"</td>")
+    print(" </tr>")
+print ("</table>")
