@@ -2,7 +2,10 @@
 import os
 from sys import argv
 if len(argv) < 3:
-    print("To use this script you need to supply the name of the new VirtualHost as the first command line argument and the DocumentRoot as the second")
+    print("""To use this script you need to supply the name of the new VirtualHost as the first command line argument and the DocumentRoot as the second. Here is an example of the syntax:
+            
+    sudo new-vhost my-server.com "/home/me/www"
+    """)
     exit(1)
 conf = """
 <VirtualHost *:80>
