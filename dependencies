@@ -1,0 +1,8 @@
+#!/bin/bash
+DEPENDENCIES=$(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances --no-pre-depends $1 | grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn} "^\w" | sort -u | grep -o "^[^:]\+")
+PREINSTALLED=$(wget http://releases.ubuntu.com/17.10/ubuntu-17.10.1-desktop-amd64.manifest -O /dev/stdout -o /dev/null | grep -o "^\S\+" | grep -o "^[^:]\+")
+for package in $DEPENDENCIES; do
+  if ! echo $PREINSTALLED | grep -q "\s$package"; then
+    echo $package
+  fi
+done
