@@ -26,4 +26,4 @@ elif os.path.isfile("/etc/apache2/extra/httpd-vhosts.conf"):
 else:
     print("No compatible apache version found")
     exit(1)
-open("/etc/hosts", "a").write("127.0.0.1 "+argv[1])
+open("/etc/hosts", "a").write("\n127.0.0.1 "+argv[1])
