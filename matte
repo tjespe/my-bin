@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import random, time, os
+from fractions import Fraction
+
+# Denne funksjonen tømmer vinduet
+def clear():
+    os.system("clear")
+
+# De to funksjonene under konverterer indekser til bokstaver og bokstaver til indekser
+chars = ["A", "B", "C", "D"]
+s_chars = ["a", "b", "c", "d"]
+def i_to_c(i):
+    return chars[i]
+def c_to_i(c):
+    return (c in chars and chars.index(c)) or (c in s_chars and s_chars.index(c)) or 0
+
+# Denne funksjonen gir brukeren svaralternativer og returnerer svaret brukeren valgte
+def prompt_with_alternatives(alternatives):
+    random.shuffle(alternatives)
+    print("\n\nDette er alternativene:\n")
+    for i in range(len(alternatives)):
+        print("	"+i_to_c(i)+":  "+str(alternatives[i]))
+    return alternatives[c_to_i(input("\nHvilket alternativ tror du er riktig?  "))]
+
+# Denne funksjonen finner to tilfeldige faktorer for et tall
+def get_two_factors(n):
+    i = random.randint(1, n)
+    while n % i:
+        i = random.randint(1, n)
+    return [i, int(n/i)]
+
+clear()                                                     # Tøm vinduet
+correct_answers = 0                                         # Denne variabelen teller antall riktige svar
+rounds = int(input("Hvor mange spørsmål vil du ha?   "))    # Spør hvor mange runder som skal spilles
+for r in range(rounds):                                     # Loop gjennom rundene
+    type = random.randint(0,4)                              # Bestem tilfeldig hvilken type spørsmål som skal stilles
+    if type < 2:                                            # Still spørsmål om kvadratrot
+        clear()                                             # Tøm vinduet
+        print("Ok, nå kommer et spørsmål om kvadratrot")    # Fortell spilleren hvilken type spørsmål som kommer
+        correct = random.randint(4,15)                      # Velg et tilfeldig tall som riktig svar
+        if random.randint(0,1):                             # Still et spørsmål om ganging hvis randint(0,1) blir 1
+            factors_of_square = get_two_factors(correct**2) # Finn to faktorer til kvadratet av det riktige svaret
+            print("Hva er √"+str(factors_of_square[0])+" * √"+str(factors_of_square[1])+"?")    # Still spørsmålet
+            if correct == int(input("\nHva er svaret? (Skriv tallet): ")):                      # Evaluer svaret
+                print("Det er\033[92m riktig\033[0m!!!")
+                correct_answers += 1
+            else:
+                print("Det var \033[91mfeil\033[0m, riktig svar var "+str(correct))
+                time.sleep(2)
+        else:                                               # Still spørsmål om deling hvis det ikke ble om ganging
+            nevner = random.randint(2,5)                    # Sett nevneren til et tilfeldig tall
+            teller = (correct**2)*nevner                    # Telleren er det riktige svaret i annen ganger nevneren
+            print("Hva er √"+str(teller)+" : √"+str(nevner)+"?")    # Still spørsmålet
+            if correct == int(input("\nHva er svaret? (Skriv tallet): ")): # Evaluer svaret
+                print("Det er\033[92m riktig\033[0m!!!")
+                correct_answers += 1
+            else:
+                print("Det var \033[91mfeil\033[0m, riktig svar var "+str(correct))
+                time.sleep(2)
+        time.sleep(1)
+    elif type < 4:                                          # Still spørsmål om brøk hvis type < 4
+        clear()                                             # Tøm vinduet
+        print("Ok, nå kommer et spørsmål om brøk")          # Fortell spilleren hvilken type spørsmål som kommer
+        # Finn to tilfeldige tellere og to tilfeldige nevnere
+        t_1 = random.randint(1,15)
+        n_1 = random.randint(1,15)
+        t_2 = random.randint(1,15)
+        n_2 = random.randint(1,15)
+        # Velg en tilfeldig regneoperasjon
+        operator = random.choice(("+", "-", "*", "/"))
+        # Regn ut det riktige svaret
+        correct = str(Fraction(eval("("+str(t_1)+"/"+str(n_1)+")"+operator+"("+str(t_2)+"/"+str(n_2)+")")).limit_denominator())
+        # Still spørsmålet
+        print("Regn ut: "+str(t_1)+"/"+str(n_1)+" "+operator.replace("/", ":")+" "+str(t_2)+"/"+str(n_2))
+        # Gi spilleren noen alternativer og evaluer svaret
+        if correct == prompt_with_alternatives([correct, str(random.randint(1,15))+"/"+str(random.randint(1,15)), str(random.randint(1,15))+"/"+str(random.randint(1,15)), str(random.randint(1,15))+"/"+str(random.randint(1,15))]):
+            print("Det er\033[92m riktig\033[0m!!!")
+            correct_answers += 1
+        else:
+            print("Det var \033[91mfeil\033[0m, riktig svar var "+str(correct))
+            time.sleep(2)
+    else:
+        # Tøm vinduet og still et spørsmål om desimaltall 
+        clear()
+        difficulties = ("tideler", "hundredeler", "tusendeler", "titusendeler")
+        difficulty = random.randint(0,3)
+        print("Ok, nå kommer et spørsmål om "+difficulties[difficulty])
+        number = round(random.randint(0,100000))/1000
+        print("Hvor mange "+difficulties[difficulty]+" er det i "+str(number)+"?")
+        correct = round(number*(10**(difficulty+1))*10000)/10000
+        alternatives = [correct, round(number*(10**(difficulty))*10000)/10000, round(number*(10**(difficulty+2))*10000)/10000, round(number*(10**(difficulty+3))*10000)/10000]
+        answer = round(prompt_with_alternatives(alternatives))
+        if answer == round(correct):
+            print("\n\nDu fikk\033[92m riktig\033[0m!")
+            correct_answers += 1
+        else:
+            print("\n\nDet var \033[91mfeil\033[0m. Riktig svar var "+str(correct))
+            time.sleep(2)
+    time.sleep(1)
+
+# Fortell spilleren at det er ferdig og fortell dem hvor mange riktige de fikk
+print("Ok, da er det ferdig. Du fikk "+str(correct_answers)+" riktige av "+str(rounds)+" mulige.")
+# Sov i 3 sekunder før scriptet avsluttes
+time.sleep(3)
