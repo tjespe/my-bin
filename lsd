@@ -7,5 +7,5 @@ while True:
     txt = ""
     for i in range(int(columns)):
         txt += random.choice(bcolors) + str(random.randint(0,9))
-    print txt
+    print(txt)
 
