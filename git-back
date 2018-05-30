@@ -1,0 +1,3 @@
+#!/bin/bash
+# Goes back one commit
+git checkout HEAD~
