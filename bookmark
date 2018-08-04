@@ -1,0 +1,13 @@
+#!/bin/bash 
+
+echo "What do you want to use as alias?"
+printf "> "
+read
+
+ALIAS="alias $REPLY='caffeinate -u -t 3 2> /dev/null && google-chrome \"$(get-chrome-url)\"' # Chrome bookmark"
+echo $ALIAS >> ~/.zshrc
+
+echo "From now on, just type $REPLY to open $(get-chrome-url) in Chrome."
+if command -v caffeinate > /dev/null 2>&1; then
+  echo "Additionally, the display will be turned on if the Mac is in sleep mode"
+fi

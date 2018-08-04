@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if command -v osascript > /dev/null 2>&1; then
+  echo 'tell application "Google Chrome"
+           get URL of active tab of window 1
+        end tell' | osascript;
+else
+ echo "This script currently only works with Macs"
+fi
