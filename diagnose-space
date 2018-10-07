@@ -1,0 +1,13 @@
+#!/bin/bash
+
+find . -type f -exec du -sh {} + | grep "^\(\d\d\S*M\|\S\+[GTP]\)" | while read -r line; do
+  SPACE=$(echo $line | grep -o "^\S\+")
+  NAME=$(echo "$line" | grep -o "	.\+$" | grep -o "[^	]\+")
+  printf "Do you want to save $SPACE by deleting $NAME? [y/N] "
+  read -n1 </dev/tty
+  if [[ "$REPLY" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
+    rm "$NAME"
+    echo "Deleted $NAME"
+  fi
+  printf "\n"
+done
