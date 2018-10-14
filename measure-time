@@ -1,0 +1,9 @@
+#!/bin/bash
+
+for cmd in $@; do
+  START=$(date +%s)
+  $cmd > /dev/null
+  END=$(date +%s)
+  DIFF=$(echo "$END - $START" | bc)
+  echo "Execution of $cmd took $DIFF seconds"
+done

@@ -1,2 +1,6 @@
 #!/bin/bash
 sudo mv /lib/systemd/systemd-sleep /lib/systemd/systemd-sleep%
+
+TIMEOUT=${1:-3600}
+echo "Suspend functionality will be enabled in $TIMEOUT seconds"
+sleep $TIMEOUT && sudo enable-suspend & disown
