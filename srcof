@@ -1,5 +1,10 @@
 #!/bin/bash
 
 for cmd in $@; do
-  less -EX $(which $cmd)
+  fname=$(which $cmd)
+  if [ "$fname" ]; then
+    less $fname
+  else
+    echo "Could not find $cmd" | less
+  fi
 done
