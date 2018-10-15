@@ -1,11 +1,19 @@
 #!/bin/bash 
+# Usage:
+#   1st parameter: name of project
+#   2nd parameter: name of app
 
+mkdir $1
+cd $1
 git init
 python3 -m virtualenv env
 git ignore env
 source env/bin/activate
 pip install django
 django-admin startproject $1
-python $1/manage.py startapp $1
+cd $1
+python manage.py startapp $2
 
-echo "Type 'source env/bin/activate' to activate virtual environment (for testing, developing and running server)"
+echo "
+Type 'cd $1' to enter project,
+and type 'source env/bin/activate' to activate virtual environment (for testing, developing and running server)."
