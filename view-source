@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for cmd in $@; do
+  less -X $(which "$cmd")
+done
