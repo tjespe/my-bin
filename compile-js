@@ -1,0 +1,16 @@
+#!/bin/bash
+
+DIR="$(dirname "$0")"
+JAR="$DIR/assets/closure-compiler.jar"
+CODE=""
+
+if [ $# -eq 0 ]; then
+  CODE=$(cat /dev/stdin)
+else
+  for file; do
+    CODE="$CODE 
+    $(cat "$file")"
+  done
+fi
+
+echo "$CODE" | java -jar "$JAR"
