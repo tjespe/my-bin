@@ -1,0 +1,14 @@
+#!/usr/bin/env osascript
+tell application "Reminders"
+	show list "Skole"
+	set the bounds of first window to {1625, 0, 1920, 1000}
+end tell
+
+tell application "Google Chrome"
+  activate
+	set the bounds of first window to {0, 0, 1625, 1000}
+  open location "https://drive.google.com/drive/u/0/"
+  open location "https://osloskolen.itslearning.com/"
+  delay 1
+  execute front window's active tab javascript "document.getElementById('ctl00_ContentPlaceHolder1_federatedLoginWrapper').getElementsByTagName('a')[0].click()"
+end tell
