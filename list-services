@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Lists all non system services
+launchctl list | grep "^[^-].\+" | grep -o "[a-zA-Z].\+" | sed 's/^com\.apple.*//g' | grep . | sed 1d
