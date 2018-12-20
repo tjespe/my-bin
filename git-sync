@@ -1,0 +1,22 @@
+#!/bin/bash
+# Syncs all git repos in a directory
+# Takes one optional argument: a string to search for in the repos origin url (e.g. "github")
+start_dir=$(pwd)
+for dir in *; do
+  cd "$start_dir"
+  if [ -d "$dir" ]; then
+    cd "$dir"
+    if git remote get-url origin > /dev/null 2> /dev/null; then
+      if git remote get-url origin | grep -q "$1"; then
+        printf "\n\nDo you want to sync $dir? [Y/n] "
+        read
+        if ! [[ $REPLY =~ ^[Nn]$ ]]; then
+          printf "==================\nSyncing $dir\n==================\n"
+          git pull
+          git push
+          git pull
+        fi
+      fi
+    fi
+  fi
+done
