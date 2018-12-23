@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo mv /lib/systemd/systemd-sleep% /lib/systemd/systemd-sleep
