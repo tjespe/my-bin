@@ -1,0 +1,10 @@
+#!/bin/bash
+# Cleans all git repos in a directory
+start_dir=$(pwd)
+for dir in *; do
+  cd "$start_dir"
+  if [ -d "$dir" ]; then
+    cd "$dir"
+    git gc
+  fi
+done
