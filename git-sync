@@ -12,7 +12,7 @@ for dir in *; do
         printf "\n\nDo you want to sync $dir? [Y/n] "
         read
         if ! [[ $REPLY =~ ^[Nn]$ ]]; then
-          printf "==================\nSyncing $dir\n==================\n"
+          header "Syncing $dir"
           git pull
           git push
           git pull
