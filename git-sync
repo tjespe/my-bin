@@ -2,6 +2,7 @@
 # Syncs all git repos in a directory
 # Takes one optional argument: a string to search for in the repos origin url (e.g. "github")
 start_dir=$(pwd)
+echo "Pushing and pulling repositories with a origin url that contains $1"
 for dir in *; do
   cd "$start_dir"
   if [ -d "$dir" ]; then
