@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+# Executes arguments and waits infinitely afterwards
+
+# Execute command supplied in arguments
+from sys import argv
+import subprocess
+subprocess.Popen(argv[1:]).wait()
+
+# Sleep infinitely
+from os import path
+dirname = path.dirname(path.realpath(__file__))
+subprocess.Popen(dirname+"/pause").wait()
