@@ -1,0 +1,14 @@
+#!/bin/bash
+# This script starts a never-ending server on the port supplied as first argument
+
+if [ "$#" -ne 1 ]
+then
+  echo "Usage: tcp-server <PORT_NUMBER>"
+  exit 1
+fi
+
+while true; do
+  if ! nc -l $1; then
+    exit
+  fi
+done
