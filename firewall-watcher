@@ -1,0 +1,7 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+
+if ./can-you-see-me | grep -q Success; then
+  RESULT=$(/sbin/pfctl -e -f /etc/pf.conf 2>&1)
+  printf "Trying to enable...\n\n$RESULT\n" | mail -s "Firewall was off" tordjohanespe@gmail.com
+fi

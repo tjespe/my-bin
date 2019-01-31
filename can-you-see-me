@@ -1,0 +1,2 @@
+#!/bin/bash
+curl 'https://canyouseeme.org/' --data 'port=80&IP=$(get-ip)' --compressed 2> /dev/null | grep "I.*see your service" | sed 's/<[^>]*>/ /g' | sed 's/&nbsp;//g' | sed 's/  */ /g' | cut -c2-
