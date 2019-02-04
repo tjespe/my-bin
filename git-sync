@@ -1,8 +1,15 @@
 #!/bin/bash
 # Syncs all git repos in a directory
 # Takes one optional argument: a string to search for in the repos origin url (e.g. "github")
+# Available flags:
+#   --no-push  Do not push after pulling
 start_dir=$(pwd)
-printf "Pushing and pulling repositories with a origin url that contains $1"
+if [[ "$@" == *"--no-push"* ]]; then
+  printf "Pulling repositories with a origin url that contains $1"
+  NO_PULL="true"
+else
+  printf "Pulling and pushing repositories with a origin url that contains $1"
+fi
 for dir in *; do
   cd "$start_dir"
   if [ -d "$dir" ]; then
@@ -14,8 +21,10 @@ for dir in *; do
         if ! [[ $REPLY =~ ^[Nn]$ ]]; then
           header "Syncing $dir"
           git pull
-          git push
-          git pull
+          if [ "$NO_PULL" != "true" ]; then
+            git push
+            git pull
+          fi
         fi
       fi
     fi
