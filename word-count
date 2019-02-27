@@ -1,0 +1,18 @@
+#!/bin/bash
+words=0
+count=$(find $@ | wc -l)
+i=0
+find $@ | (while read f; do
+  if echo "$f" | grep -q "\.docx\?$"; then
+    words=$(($words + $(docx2txt.pl "$f" - | wc -w)))
+  elif ! file --mime "$f" | grep -q "binary$"; then
+    words=$(($words + $(cat "$f" | wc -w)))
+  fi
+  i=$(($i+1))
+  percentage=$(((100*$i)/$count))
+  remaining=$((100-$percentage))
+  printf "\r["
+  for _ in $(seq 0 1 $percentage | sed -n '1!p'); do printf "#"; done
+  for _ in $(seq 0 1 $remaining | sed -n '1!p'); do printf " "; done
+  printf "] $percentage percent complete "
+done && printf "\n\n$words words\n")
