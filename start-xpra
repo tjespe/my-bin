@@ -1,0 +1,2 @@
+#!/bin/bash
+xpra start-desktop --start-child=xterm --exit-with-client=yes :100
