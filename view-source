@@ -3,7 +3,6 @@
 for cmd in $@; do
   if command -v src-hilite-lesspipe.sh > /dev/null; then
     export LESSOPEN="| \"$(which src-hilite-lesspipe.sh)\" %s"
-    printf "\033[1;30mApplying syntax highlighting, press Ctrl-C if this takes to long\033[0;30m\n"
   else
     echo "Couldn't find src-hilite-lesspipe.sh, please install it if you want syntax highlighting"
   fi
