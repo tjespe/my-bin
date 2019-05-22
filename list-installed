@@ -1,0 +1,16 @@
+#!/bin/bash
+# This script attempts to list all software that have been installed by the user
+ALL_INSTALLED=$(apt list --installed | grep -oP "^[^/]+" | grep -vP "^(lib|linux|grub|shim|efi|dkms|Listing...)" | grep -vP "(common|drivers?|kernel)")
+RELEASE=$(lsb_release -a 2> /dev/null | grep Release | grep -oP "\d\d\.\d\d")
+MANIFEST="http://releases.ubuntu.com/$RELEASE/ubuntu-$RELEASE-desktop-amd64.manifest"
+PREINSTALLED=$(wget "$MANIFEST" -O /dev/stdout -o /dev/null | grep -o "^\S\+" | grep -o "^[^:]\+")
+PRINTED=""
+for package in $ALL_INSTALLED; do
+  if ! echo $PREINSTALLED | grep -q "\s$package"; then
+    short_name=$(cut -d '-' -f 1 <<< "$package")
+    if ! echo $PRINTED | grep -q "\s$short_name"; then
+      echo $package | GREP_COLOR="1;36" grep --color=auto "$short_name"
+      PRINTED="$PRINTED $short_name"
+    fi
+  fi
+done
