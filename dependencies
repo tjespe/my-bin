@@ -1,6 +1,8 @@
 #!/bin/bash
-DEPENDENCIES=$(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances --no-pre-depends $1 | grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn} "^\w" | sort -u | grep -o "^[^:]\+")
-PREINSTALLED=$(wget http://releases.ubuntu.com/17.10/ubuntu-17.10.1-desktop-amd64.manifest -O /dev/stdout -o /dev/null | grep -o "^\S\+" | grep -o "^[^:]\+")
+DEPENDENCIES=$(apt-cache depends --recurse --no-recommends --no-suggests --no-conflicts --no-breaks --no-replaces --no-enhances --no-pre-depends $1 | grep "^\w" | sort -u | grep -o "^[^:]\+")
+RELEASE=$(lsb_release -a 2> /dev/null | grep Release | grep -oP "\d\d\.\d\d")
+MANIFEST="http://releases.ubuntu.com/$RELEASE/ubuntu-$RELEASE-desktop-amd64.manifest"
+PREINSTALLED=$(wget "$MANIFEST" -O /dev/stdout -o /dev/null | grep -o "^\S\+" | grep -o "^[^:]\+")
 for package in $DEPENDENCIES; do
   if ! echo $PREINSTALLED | grep -q "\s$package"; then
     echo $package
