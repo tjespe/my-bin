@@ -1,0 +1,7 @@
+#!/bin/bash
+if [ "$EUID" -ne 0 ]; then
+  sudo "$0"
+  exit
+fi
+grub-reboot $(grep -i "mac" /boot/grub/grub.cfg | cut -d "\"" -f2 | head -1)
+reboot
