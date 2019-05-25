@@ -1,0 +1,20 @@
+#!/bin/bash
+cd /Volumes/Shared\ files/System/etc/firewall
+function read_file {
+  grep -ivP "^(#|\s|\n)" "$1" | grep . | grep -oP "^[a-zA-Z0-9:\./]+"
+}
+read_file cloudflare.txt | while read ip; do
+  echo "Partially allowing $ip"
+  sudo ufw allow from "$ip" to any port 800 proto tcp
+  if [[ $? -gt 0 ]]; then echo $ip; fi
+done
+read_file goodguys.txt | while read ip; do
+  echo "Allowing $ip"
+  sudo ufw allow from "$ip" to any port 800,80,443,22 proto tcp
+  if [[ $? -gt 0 ]]; then echo $ip; fi
+done
+sudo ufw default allow incoming 
+sudo ufw default allow outgoing
+sudo ufw deny from any to any port 800,80,443,22 proto tcp
+sudo ufw deny from any to any port 800,80,443,22 proto udp
+sudo ufw enable
