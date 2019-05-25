@@ -2,6 +2,10 @@
 cd "$(dirname "$0")"
 
 if ./can-you-see-me | grep -q Success; then
-  RESULT=$(/sbin/pfctl -e -f /etc/pf.conf 2>&1)
+  if [ -f /sbin/pfctl ]; then
+    RESULT=$(/sbin/pfctl -e -f /etc/pf.conf 2>&1)
+  elif command -v ufw > /dev/null; then
+    RESULT=$(./configure-ufw)
+  fi
   printf "Trying to enable...\n\n$RESULT\n" | mail -s "Firewall was off" tordjohanespe@gmail.com
 fi
