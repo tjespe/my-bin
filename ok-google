@@ -8,4 +8,5 @@ USER = CONFIG.get("user", "tordjohanespe")
 command = " ".join(sys.argv[1:])
 post_data = { "command": command, "user": USER }
 headers = { "content-type": "application/json" }
-requests.post(URL, data=json.dumps(post_data), headers=headers)
+req = requests.post(URL, data=json.dumps(post_data), headers=headers)
+print(req.json().response)
