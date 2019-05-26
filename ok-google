@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+import requests, sys, json
+URL = "http://10.0.1.2:2002/assistant"
+
+command = " ".join(sys.argv[1:])
+post_data = { "command": command }
+headers = { "content-type": "application/json" }
+requests.post(URL, data=json.dumps(post_data), headers=headers)
