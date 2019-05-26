@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-import requests, sys, json
-URL = "http://10.0.1.2:2002/assistant"
+import requests, sys, json, os
+CONFIG_FILE_PATH = os.path.expanduser("~/.assistantrc")
+CONFIG = json.load(CONFIG_FILE_PATH) if os.path.isfile(CONFIG_FILE_PATH) else {}
+URL = CONFIG.get("url", "http://10.0.1.2:2002/assistant")
+USER = CONFIG.get("user", "tordjohanespe")
 
 command = " ".join(sys.argv[1:])
-post_data = { "command": command }
+post_data = { "command": command, "user": USER }
 headers = { "content-type": "application/json" }
 requests.post(URL, data=json.dumps(post_data), headers=headers)
