@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import requests, sys, json, os, simplejson
+import requests, sys, json, os, simplejson, platform, subprocess
 CONFIG_FILE_PATH = os.path.expanduser("~/.assistantrc")
 CONFIG = json.load(CONFIG_FILE_PATH) if os.path.isfile(CONFIG_FILE_PATH) else {}
 URL = CONFIG.get("url", "http://10.0.1.2:2002/assistant")
@@ -10,6 +10,16 @@ post_data = { "command": command, "user": USER }
 headers = { "content-type": "application/json" }
 req = requests.post(URL, data=json.dumps(post_data), headers=headers)
 try:
-    print(req.json().get("response", req.json()))
+    resp = req.json()
+    if resp.get("audio"):
+        filepath = resp.get("audio")
+        if platform.system() == 'Darwin':       # macOS
+            subprocess.call(('open', filepath))
+        elif platform.system() == 'Windows':    # Windows
+            os.startfile(filepath)
+        else:                                   # linux variants
+            subprocess.call(('xdg-open', filepath))
+    else:
+        print(resp.get("response", resp))
 except simplejson.errors.JSONDecodeError:
     print(req.text)
