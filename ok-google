@@ -11,7 +11,9 @@ headers = { "content-type": "application/json" }
 req = requests.post(URL, data=json.dumps(post_data), headers=headers)
 try:
     resp = req.json()
-    if resp.get("audio"):
+    if resp.get("response"):
+        print(resp.get("response", resp))
+    elif resp.get("audio"):
         filepath = resp.get("audio")
         if platform.system() == 'Darwin':       # macOS
             subprocess.call(('open', filepath))
@@ -20,6 +22,6 @@ try:
         else:                                   # linux variants
             subprocess.call(('xdg-open', filepath))
     else:
-        print(resp.get("response", resp))
+        print(resp)
 except simplejson.errors.JSONDecodeError:
     print(req.text)
