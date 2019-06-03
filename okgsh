@@ -1,0 +1,11 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+while true; do
+  printf "> "
+  read line
+  if [ "$line" != "exit" ]; then
+    ok-google "$line"
+  else
+    exit 0
+  fi
+done
