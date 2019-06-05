@@ -14,13 +14,16 @@ try:
     if resp.get("response"):
         print(resp.get("response", resp))
     elif resp.get("audio"):
-        filepath = resp.get("audio")
-        if platform.system() == 'Darwin':       # macOS
-            subprocess.call(('open', filepath))
-        elif platform.system() == 'Windows':    # Windows
-            os.startfile(filepath)
-        else:                                   # linux variants
-            subprocess.call(('xdg-open', filepath))
+        if os.isatty(sys.stdin.fileno()):
+            filepath = resp.get("audio")
+            if platform.system() == 'Darwin':       # macOS
+                subprocess.call(('open', filepath))
+            elif platform.system() == 'Windows':    # Windows
+                os.startfile(filepath)
+            else:                                   # linux variants
+                subprocess.call(('xdg-open', filepath))
+        else:
+            print("Successfully relayed message")
     else:
         print(resp)
 except simplejson.errors.JSONDecodeError:
