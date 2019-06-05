@@ -1,0 +1,6 @@
+#!/bin/bash
+if ! lsof -i:2002 > /dev/null; then
+  cd ~/Documents/Servere/Assistant/
+  rm server/response.wav
+  npm run start >> log.txt & disown
+fi
