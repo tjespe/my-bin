@@ -1,6 +1,15 @@
 #!/bin/bash
 if ! lsof -i:2002 > /dev/null; then
   cd ~/Documents/Servere/Assistant/
-  rm server/response.wav
+  if [ -f server/response.wav ]; then
+    rm server/response.wav
+  fi
+  if ! [ -f node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node ]; then
+    cp ~/Backups/grpc_node.node node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node
+  elif ! [ "$(wc -l node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node | grep -oP "\d+" | head -1)" -gt "0" ]; then
+    rm node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node
+    cp ~/Backups/grpc_node.node node_modules/grpc/src/node/extension_binary/node-v57-linux-x64-glibc/grpc_node.node
+  fi
+  PATH="$PATH:/usr/local/bin/"
   npm run start >> log.txt & disown
 fi
