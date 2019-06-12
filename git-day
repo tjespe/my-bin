@@ -1,0 +1,13 @@
+#!/bin/bash
+LC_TIME=en_US.UTF-8
+
+log=$(git log | grep -B 2 "$(date +"%a %b %d")" | grep -B 1 Tord | grep commit | grep -oP "\S+$" | while read id; do git show $id --stat | tail -1; done)
+
+function get_number_of {
+  echo $log | grep -oP "\d+ $1" | grep -oP "\d+" | awk '{s+=$1} END {print s}'
+}
+
+insertions=$(get_number_of insertions)
+deletions=$(get_number_of deletions)
+
+echo "You have added $insertions lines today and removed $deletions"
