@@ -10,4 +10,9 @@ function get_number_of {
 insertions=$(get_number_of insertions)
 deletions=$(get_number_of deletions)
 
-echo "You have added $insertions lines today and removed $deletions"
+printf "You have added $insertions lines today and removed $deletions, i.e. you have "
+if [ $insertions -gt $deletions ]; then
+  echo "added a net of $(($insertions - $deletions)) lines"
+else
+  echo "removed a net of $(($deletions - $insertions)) lines"
+fi
