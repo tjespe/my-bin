@@ -1,17 +1,18 @@
 #!/bin/bash
 LC_TIME=en_US.UTF-8
+date=${1:-"$(date +"%a %b %d")"}
 
-log=$(git log | grep -B 2 "$(date +"%a %b %d")" | grep -B 1 Tord | grep commit | grep -oP "\S+$" | while read id; do git show $id --stat | tail -1; done)
+log=$(git log | grep -B 2 "$date" | grep -B 1 Tord | grep commit | grep -oP "\S+$" | while read id; do git show $id --stat | tail -1; done)
 
 function get_number_of {
-  echo $log | grep -oP "\d+ $1" | grep -oP "\d+" | awk '{s+=$1} END {print s}'
+  echo $log 0 deletions 0 insertions | grep -oP "\d+ $1" | grep -oP "\d+" | awk '{s+=$1} END {print s}'
 }
 
 insertions=$(get_number_of insertions)
 deletions=$(get_number_of deletions)
 
 printf "You have added $insertions lines today and removed $deletions, i.e. you have "
-if [ $insertions -gt $deletions ]; then
+if (( $insertions >= $deletions )); then
   echo "added a net of $(($insertions - $deletions)) lines"
 else
   echo "removed a net of $(($deletions - $insertions)) lines"
