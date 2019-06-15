@@ -3,7 +3,7 @@
 
 LC_TIME=en_US.UTF-8
 query=${@:-"$(date +"%b %d")"}
-grep_pattern=$(echo $query | sed "s/ /\*/g")
+grep_pattern=$(echo $query | sed "s/ /.\*/g")
 
 username=$(git config --get user.name)
 
