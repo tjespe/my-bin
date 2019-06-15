@@ -8,7 +8,7 @@ grep_pattern=$(echo $query | sed "s/ /.\*/g")
 username=$(git config --get user.name)
 
 function get_log {
-  git log | grep -B 2 "$grep_pattern" | grep -B 1 "$username" | grep commit | grep -oP "\S+$" | while read id; do 
+  git log | grep -B 4 "$grep_pattern" | grep -B 1 "$username" | grep commit | grep -oP "\S+$" | while read id; do 
     git show $id --stat | tail -1
   done
 }
