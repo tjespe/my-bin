@@ -20,7 +20,7 @@ function get_number_of {
 insertions=$(get_number_of insertions)
 deletions=$(get_number_of deletions)
 
-printf "$username's commits matching $query contains $insertions insertions and $deletions deletions, i.e. "
+printf "You have added $insertions lines and removed $deletions, i.e. "
 if (( $insertions >= $deletions )); then
   echo "a net of $(($insertions - $deletions)) insertions"
 else
