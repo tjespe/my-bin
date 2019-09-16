@@ -1,18 +1,28 @@
 #!/bin/bash
-LC_TIME=en_US.UTF-8
+# Script for getting a summary of commits matching arguments supplied (or todays date if no arguments are supplied)
 
-log=$(git log | grep -B 2 "$(date +"%a %b %d")" | grep -B 1 Tord | grep commit | grep -oP "\S+$" | while read id; do git show $id --stat | tail -1; done)
+LC_TIME=en_US.UTF-8
+query=${@:-"$(date +"%b %d")"}
+grep_pattern=$(echo $query | sed "s/ /.\*/g")
+
+username=$(git config --get user.name)
+
+function get_log {
+  git log | grep -B 4 "$grep_pattern" | grep -B 1 "$username" | grep commit | grep -oP "\S+$" | while read id; do 
+    git show $id --stat | tail -1
+  done
+}
 
 function get_number_of {
-  echo $log | grep -oP "\d+ $1" | grep -oP "\d+" | awk '{s+=$1} END {print s}'
+  echo $(get_log) 0 deletions 0 insertions | grep -oP "\d+ $1" | grep -oP "\d+" | awk '{s+=$1} END {print s}'
 }
 
 insertions=$(get_number_of insertions)
 deletions=$(get_number_of deletions)
 
-printf "You have added $insertions lines today and removed $deletions, i.e. you have "
-if [ $insertions -gt $deletions ]; then
-  echo "added a net of $(($insertions - $deletions)) lines"
+printf "You have added $insertions lines and removed $deletions, i.e. "
+if (( $insertions >= $deletions )); then
+  echo "a net of $(($insertions - $deletions)) insertions"
 else
-  echo "removed a net of $(($deletions - $insertions)) lines"
+  echo "a net of $(($deletions - $insertions)) deletions"
 fi
