@@ -1,0 +1,9 @@
+#!/bin/bash
+name=$(git config --global user.name)
+email=$(git config --global user.email)
+git config --global user.email "None"
+git config --global user.name "Formatter"
+printf "Temporarily changed Git identity. Press enter to change back."
+read
+git config --global user.email "$email"
+git config --global user.name "$name"

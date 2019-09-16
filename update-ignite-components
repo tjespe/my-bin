@@ -1,0 +1,7 @@
+#!/bin/bash
+cd ~/Git/ignite-components
+yarn publish --non-interactive
+git push
+cd ~/Git/web
+ys -k
+yarn add ignite-components

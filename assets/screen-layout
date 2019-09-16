@@ -1,0 +1,11 @@
+termcapinfo xterm* ti@:te@
+mousetrack on
+screen zsh
+split -v
+focus
+screen zsh
+split
+focus
+screen zsh
+focus
+layout save default
