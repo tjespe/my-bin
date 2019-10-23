@@ -1,0 +1,14 @@
+#!/usr/bin/python3
+def calculate(hours, weekdays, holidays_in_month=0, holidays_in_period=0, monthly_wage=30000, overtime_wage=280):
+    base = ((weekdays - holidays_in_month)/weekdays)*30000
+    workdays = weekdays - holidays_in_period
+    minimum_hours = workdays*8
+    overtime_hours = hours - minimum_hours
+    return base + overtime_hours*overtime_wage
+
+if __name__ == "__main__":
+    from sys import argv
+    if len(argv) < 3 or "--help" in argv:
+        print(f"Usage: hours weekdays [holidays in month] [holidays in period] [monthly wage] [hourly overtime wage]")
+        exit("--help" not in argv)
+    print(calculate(*[int(n) for n in argv[1:]]))
