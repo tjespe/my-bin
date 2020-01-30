@@ -1,0 +1,2 @@
+#!/bin/bash
+curl https://circleci.com/api/v1.1/project/github/ignite-analytics/api/$1/output/108/0?file=true

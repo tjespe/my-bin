@@ -1,0 +1,12 @@
+#!/bin/bash
+
+ARGS="${@:2}"
+HASH="$(echo $args | md5sum)"
+STAMP="$(($(date +"%s") / $1))"
+LOCKFILE="/tmp/$HASH-$STAMP.lock"
+if [ ! -f "$LOCKFILE" ]; then
+  touch "$LOCKFILE"
+  sleep $1
+  "${@:2}"
+  rm "$LOCKFILE"
+fi
