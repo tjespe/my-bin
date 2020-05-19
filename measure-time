@@ -1,9 +1,7 @@
 #!/bin/bash
 
-for cmd in $@; do
-  START=$(date +%s)
-  $cmd > /dev/null
-  END=$(date +%s)
-  DIFF=$(echo "$END - $START" | bc)
-  echo "Execution of $cmd took $DIFF seconds"
-done
+START=$(date +%s%N | cut -b1-13)
+$@
+END=$(date +%s%N | cut -b1-13)
+DIFF=$(echo "$END - $START" | bc)
+echo "Execution took $DIFF ms"
