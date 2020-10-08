@@ -2,7 +2,8 @@
 name=$(git config --global user.name)
 email=$(git config --global user.email)
 git config --global user.email "None"
-git config --global user.name "Formatter"
+fake_name=${@:-"Formatter"}
+git config --global user.name "$fake_name"
 printf "Temporarily changed Git identity. Press enter to change back."
 read
 git config --global user.email "$email"

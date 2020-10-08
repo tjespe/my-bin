@@ -1,0 +1,4 @@
+#!/bin/bash
+
+git fetch origin $1
+git merge -Xignore-all-space origin/$1
