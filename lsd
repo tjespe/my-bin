@@ -2,10 +2,8 @@
 import os, random
 
 bcolors = ('\033[95m', '\033[94m', '\033[92m', '\033[93m', '\033[91m', '\033[1m', '\033[0m')
+rows, columns = os.popen('stty size', 'r').read().split()
+r = range(int(columns))
 while True:
-    rows, columns = os.popen('stty size', 'r').read().split()
-    txt = ""
-    for i in range(int(columns)):
-        txt += random.choice(bcolors) + str(random.randint(0,9))
-    print(txt)
+    print("".join(random.choice(bcolors) + str(random.randint(0,9)) for i in r))
 

@@ -1,0 +1,164 @@
+#!/usr/bin/env node
+
+const cheerio = require("cheerio");
+const axios = require("axios");
+const fs = require("fs");
+
+const ROOT = "https://en.wikipedia.org/";
+const RANDOM_PATH = "/wiki/Special:Random";
+
+const RESULTS_FILE = process.env.WIKI_RESULTS;
+const RECORDS_FILE = process.env.WIKI_RELATIONS;
+const SHORTCUTS_FILE = process.env.WIKI_SHORTCUTS;
+const LOOP_FILE = process.env.WIKI_LOOPS;
+
+const getFirstValue = (arr, fn) => {
+  for (let i = 0; i < arr.length; i++) {
+    const value = fn(arr[i]);
+    if (value) return value;
+  }
+};
+
+const getFirstLinkOn = async (path, exclude) => {
+  const resp = await axios.get(`${ROOT}${path}`);
+  const $ = cheerio.load(resp.data);
+  console.log("Loading ", path);
+  let excluded = [];
+  for (tag of ["p", "ul li", "ol li"]) {
+    const selector = "#mw-content-text > .mw-parser-output > " + tag;
+    const value = getFirstValue($(selector).toArray(), (el) => {
+      const p = $(el);
+      const stripped = p.html().replace(/ \([^)]*\) /g, "");
+      const $p = cheerio.load(stripped);
+      return getFirstValue($p("a").toArray(), (ael) => {
+        const a = $(ael);
+        const href = a.attr("href")?.replace(/#.+$/, "");
+        if (!href) return;
+        if (exclude.includes(href)) {
+          if (!excluded.includes(href)) excluded.push(href);
+          return;
+        }
+        if (href.startsWith("/wiki/") && !/\/wiki\/[\w]+:/.test(href))
+          return href;
+      });
+    });
+    if (value) return [value, excluded];
+  }
+  throw Error("No link found on page " + path);
+};
+
+const traverse = async (
+  firstPath,
+  goal = "/wiki/Philosophy",
+  iterations = 1
+) => {
+  const [results, record, shortcuts] = [
+    RESULTS_FILE,
+    RECORDS_FILE,
+    SHORTCUTS_FILE,
+  ].map((fname) =>
+    fname && fs.existsSync(fname)
+      ? JSON.parse(fs.readFileSync(fname, "utf8"))
+      : {}
+  );
+  for (let i = 0; i < iterations; i++) {
+    const visited = [];
+    let currentPath = firstPath;
+    while (currentPath !== goal) {
+      console.log(currentPath);
+      visited.push(currentPath);
+      if (
+        currentPath !== RANDOM_PATH &&
+        currentPath in shortcuts &&
+        !shortcuts[currentPath].some((path) => visited.includes(path))
+      ) {
+        visited.push(...shortcuts[currentPath].slice(0, -1));
+        console.log("Skipping", shortcuts[currentPath]);
+        currentPath = shortcuts[currentPath].slice(-1)[0];
+        continue;
+      }
+      const recNext = record[currentPath];
+      if (recNext && !visited.includes(recNext)) {
+        record[currentPath] = recNext;
+        currentPath = recNext;
+        continue;
+      }
+      console.log(
+        currentPath + " !== RANDOM_PATH && currentPath in shortcuts:",
+        currentPath !== RANDOM_PATH,
+        currentPath in shortcuts
+      );
+      const [nextPath, excluded] = await getFirstLinkOn(currentPath, visited);
+      if (currentPath !== RANDOM_PATH)
+        record[currentPath] = excluded[0] || nextPath;
+      excluded.forEach((excludedPath) => {
+        const shouldBeSkipped = visited.slice(
+          visited.indexOf(excludedPath) + 1
+        );
+        if (shouldBeSkipped.some((path) => path in shortcuts))
+          shortcuts[excludedPath] = shouldBeSkipped.slice(
+            0,
+            shouldBeSkipped.findIndex((path) => path in shortcuts) + 1
+          );
+        else shortcuts[excludedPath] = [...shouldBeSkipped, nextPath];
+        if (LOOP_FILE) fs.appendFileSync(LOOP_FILE, excludedPath + "\n");
+        console.log("EXCLUDED: ", excludedPath);
+      });
+      currentPath = nextPath;
+    }
+    console.log("REACHED", currentPath);
+    console.log("Done in", visited.length, "iterations");
+    visited.forEach((path, i) => (results[path] = visited.length - i - 1));
+    visited.slice(0, -1).forEach((v, i) => {
+      if (
+        record[v] &&
+        record[v] !== visited[i + 1] &&
+        !visited.slice(0, i).includes(record[v])
+      ) {
+        console.log(
+          JSON.stringify(visited.slice(0, i)),
+          JSON.stringify(record[v]),
+          visited.slice(0, i).includes(record[v])
+        );
+        if (visited.slice(0, i).includes(record[v])) console.log("No problem");
+        else
+          throw Error(
+            `Inconsistent history: ${
+              record[v]
+            } should follow ${v} unless already visited. Found ${
+              visited[i + 1]
+            } afterwards instead, and ${
+              record[v]
+            } has not been visited. Visited before ${v}: ${JSON.stringify(
+              visited.slice(0, i)
+            )}\n Full history: ${JSON.stringify(visited)}`
+          );
+      }
+      if (v === visited[i + 1]) {
+        throw Error("Inconsistent history, " + v + " follows itself");
+      }
+      if (visited.slice(0, i).includes(v)) {
+        throw Error(
+          "Inconsistent history, " +
+            v +
+            " appears more than once: " +
+            JSON.stringify(visited)
+        );
+      }
+    });
+  }
+  [
+    [record, RECORDS_FILE],
+    [results, RESULTS_FILE],
+    [shortcuts, SHORTCUTS_FILE],
+  ].forEach(([data, fname]) =>
+    fs.writeFileSync(fname || "/dev/stdout", JSON.stringify(data, null, 2))
+  );
+};
+
+const [start, goal, iterations] = [RANDOM_PATH, "/wiki/Philosophy", 1].map(
+  (defaultArg, i) => {
+    return (process.argv.length > i + 2 && process.argv[i + 2]) || defaultArg;
+  }
+);
+traverse(start, goal, iterations);

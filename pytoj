@@ -1,0 +1,5 @@
+#!/usr/bin/env python3.8
+
+import json, sys
+
+print(json.dumps(eval(sys.argv[1]), indent=4))

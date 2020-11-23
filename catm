@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if command -v src-hilite-lesspipe.sh > /dev/null; then
+  export LESSOPEN="| \"$(which src-hilite-lesspipe.sh)\" %s"
+else
+  echo "Couldn't find src-hilite-lesspipe.sh, please install it if you want syntax highlighting"
+fi
+less -X $@
+echo
