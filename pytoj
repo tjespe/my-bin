@@ -1,5 +1,15 @@
 #!/usr/bin/env python3.8
 
-import json, sys
+"""
+This script converts inputted python objects to JSON code
+Input can be passed via first command line argument or via STDIN
+"""
 
-print(json.dumps(eval(sys.argv[1]), indent=4))
+import json, sys, fileinput
+
+if len(sys.argv) > 1:
+    pycode = sys.argv[1]
+else:
+    pycode = "".join(line.strip("\n").strip("\r\n") for line in fileinput.input())
+
+print("\n"+json.dumps(eval(pycode), indent=4))
