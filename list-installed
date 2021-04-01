@@ -2,7 +2,11 @@
 # This script attempts to list all software that have been installed by the user
 ALL_INSTALLED=$(apt list --installed | grep -oP "^[^/]+" | grep -vP "^(lib|linux|grub|shim|efi|dkms|Listing...)" | grep -vP "(common|drivers?|kernel)")
 RELEASE=$(lsb_release -a 2> /dev/null | grep Release | grep -oP "\d\d\.\d\d")
-MANIFEST="http://releases.ubuntu.com/$RELEASE/ubuntu-$RELEASE-desktop-amd64.manifest"
+TYPE="desktop"
+if grep -q Server /var/log/installer/media-info; then
+  TYPE="server"
+fi
+MANIFEST="http://releases.ubuntu.com/$RELEASE/ubuntu-$RELEASE-$TYPE-amd64.manifest"
 PREINSTALLED=$(wget "$MANIFEST" -O /dev/stdout -o /dev/null | grep -o "^\S\+" | grep -o "^[^:]\+")
 PRINTED=""
 for package in $ALL_INSTALLED; do

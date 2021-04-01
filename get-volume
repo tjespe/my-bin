@@ -1,0 +1,10 @@
+#!/bin/bash
+if [ `uname` = "Linux" ]; then
+  if pactl list sinks | grep Mute | grep -q yes; then
+    echo "Muted"
+    exit 0
+  fi
+  pactl list sinks | grep Volume | grep -oP "\d+%" | head -1
+elif [ `uname` = "Darwin" ]; then
+  osascript -e "get volume output volume $1"
+fi

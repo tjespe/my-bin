@@ -8,7 +8,13 @@ if [ `uname` = "Linux" ]; then
   PERCENT=$(( $1 ))
   MAX=`cat $DIR/max_brightness`
   NEW=$( awk "BEGIN { pc=${PERCENT}/100; i=int(pc); n=pc*${MAX}; rounded = sprintf(\"%.0f\", n); print rounded }" )
-  sudo sh -c "echo $NEW > $DIR/brightness" /usr/local/bin/set-brightness
+  FILE="$DIR/brightness"
+  if touch "$FILE" 2> /dev/null; then
+    echo $NEW > "$FILE"
+  else
+    sudo sh -c "echo $NEW > $FILE"
+    echo "For a better experience, give yourself permissions to $FILE"
+  fi
 elif [ `uname` = "Darwin" ]; then
   command -v brew >/dev/null 2>&1 || { echo >&2 "Please install homebrew from https://brew.sh.  Aborting."; exit 1; }
   command -v brightness >/dev/null 2>&1 || { echo >&2 "Please install \`brightness\` by typing \`brew install brightness\`.  Aborting."; exit 1; }

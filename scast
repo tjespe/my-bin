@@ -128,11 +128,7 @@ zones_data = []
 if not get_param_val("z"):
     print("\n\nIn which zone do you wish to play the recording?\n")
     zones = []
-    discovered = soco.discover()
-    if not discovered:
-        print("Could not find any zones")
-        exit(1)
-    for i, zone in enumerate(discovered):
+    for i, zone in enumerate(soco.discover()):
         zones.append(zone)
         print(u':   '.join((i_to_c(i), zone.player_name)))
     print(i_to_c(len(zones))+":   Don't play it")

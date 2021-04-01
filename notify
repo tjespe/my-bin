@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if command -v herbe > /dev/null; then
+	pkill herbe
+	herbe "$@"
+else
+	echo "No supported notification program found"
+	exit 1
+fi
