@@ -1,0 +1,8 @@
+#!/bin/zsh
+black $(
+  git diff master --name-only | grep "^api" | grep "\.py$" | while read f; do
+    if [ -f $f ]; then
+      echo $f
+    fi
+  done
+)

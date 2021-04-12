@@ -1,23 +1,37 @@
-#!/bin/bash
+#!/bin/zsh
+PERCENT=$(( $1 < 0 ? 0 : $1))
 if [ `uname` = "Linux" ]; then
   if [ -d "/sys/class/backlight/intel_backlight" ]; then
     DIR="/sys/class/backlight/intel_backlight"
   else
     DIR="/sys/devices/platform/applesmc.768/leds/smc::kbd_backlight"
   fi
-  PERCENT=$(( $1 ))
   MAX=`cat $DIR/max_brightness`
   NEW=$( awk "BEGIN { pc=${PERCENT}/100; i=int(pc); n=pc*${MAX}; rounded = sprintf(\"%.0f\", n); print rounded }" )
+  echo "Setting to $NEW"
+  if command -v xrandr > /dev/null; then
+    factor=$( awk "BEGIN { pc=${PERCENT}/100; i=int(pc); rounded = sprintf(\"%.1f\", pc); print rounded }" )
+    echo "Sending $factor to xrandr"
+    monitor=$(xrandr | grep primary | grep -o "^\S\+")
+    if [[ $factor -lt 1 ]]; then
+      factor=1
+    fi
+    xrandr --output "$monitor" --brightness $factor
+  fi
+  if [[ $PERCENT -gt 100 ]]; then
+    NEW=$MAX
+  fi
   FILE="$DIR/brightness"
   if touch "$FILE" 2> /dev/null; then
     echo $NEW > "$FILE"
   else
-    sudo sh -c "echo $NEW > $FILE"
-    echo "For a better experience, give yourself permissions to $FILE"
+    sudo sh -c "echo $NEW > $FILE" \
+      && echo "For a better experience, give yourself permissions to $FILE" \
+      || echo "Error executing \"echo $NEW > $FILE\" as root"
   fi
-elif [ `uname` = "Darwin" ]; then
+elif [ $(uname) = "Darwin" ]; then
   command -v brew >/dev/null 2>&1 || { echo >&2 "Please install homebrew from https://brew.sh.  Aborting."; exit 1; }
   command -v brightness >/dev/null 2>&1 || { echo >&2 "Please install \`brightness\` by typing \`brew install brightness\`.  Aborting."; exit 1; }
-  NEW_BRIGHTNESS=`printf "%.2f\n" "$(bc -l <<< "($1 / 100)")"`
-  brightness $NEW_BRIGHTNESS
+  DECIMAL=`printf "%.2f\n" "$(bc -l <<< "($PERCENT / 100)")"`
+  brightness $DECIMAL
 fi

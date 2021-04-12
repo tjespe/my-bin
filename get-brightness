@@ -1,6 +1,12 @@
-#!/bin/bash
+#!/bin/zsh
 
 CURRENT=`cat /sys/class/backlight/intel_backlight/brightness`
 MAX=`cat /sys/class/backlight/intel_backlight/max_brightness`
 
-echo $((($CURRENT*100)/$MAX))
+factor=1
+if command -v xrandr > /dev/null; then
+  monitor=$(xrandr | grep primary | grep -o "^\S\+")
+  factor=$(xrandr --verbose --current | grep ^"$monitor" -A5 | tail -n1 | grep -o "[0-9\.]\+")
+fi
+
+echo $((($CURRENT*100*$factor)/$MAX))
