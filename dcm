@@ -49,8 +49,14 @@ def get_django_container_key():
     return key
 
 container_key = get_django_container_key()
-result = run(
-    ["docker-compose", "exec", container_key, "python", "manage.py"] + sys.argv[1:],
-    check=False
-)
+if sys.argv[1] in ["up", "start"]:
+    result = run(
+        ["docker-compose", "up", "-d", container_key],
+        check=False
+    )
+else:
+    result = run(
+        ["docker-compose", "exec", container_key, "python", "manage.py"] + sys.argv[1:],
+        check=False
+    )
 sys.exit(result.returncode)
