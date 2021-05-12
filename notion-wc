@@ -1,0 +1,24 @@
+#!/bin/bash
+# Input: zipped markdown export from notion
+
+if [ $# -eq 0 ]; then
+  echo "First argument should be path to a zipped markdown export from notion"
+  exit 1
+fi
+
+abs_path="$PWD/$1"
+tmpdir="/tmp/notion-wc/$(date)"
+mkdir -p "$tmpdir"
+cd "$tmpdir"
+if command -v ditto > /dev/null; then
+  if ! ditto_log=$(ditto -V -x -k --sequesterRsrc --rsrc "$abs_path" . 2>&1); then
+    echo "Unzipping failed:\n$ditto_log"
+    exit 1
+  fi
+else
+  unzip "$abs_path" > /dev/null
+fi
+find . | grep "\.md$" | while read f; do
+  wc -w "$f"
+done | grep -o "^\s\+\d\+\s" | paste -sd+ - | bc
+rm -rf "$tmpdir"

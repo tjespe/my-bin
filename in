@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -t 0 ]; then
+  echo "Type commands (end with Ctrl-D, name of current directory is available as \$dir)"
+fi
+
+commands=$(cat)
+base_dir=$(pwd)
+
+for dir in $@; do 
+  export dir
+  if [ -d "$dir" ]; then
+    cd "$dir"
+    zsh -c "$commands"
+    cd $base_dir
+  fi
+done

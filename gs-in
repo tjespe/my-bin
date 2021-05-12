@@ -1,0 +1,10 @@
+#!/bin/zsh
+in $@ <<- END
+  if git is-git-dir; then
+    if [ "\$(git status --short)" ]; then
+      echo \$dir:
+      git status --short
+      echo
+    fi
+  fi
+END
