@@ -3,8 +3,9 @@
 if [ $# -eq 0 ]; then
   printf "Press ENTER if you are sure you want to down all containers, otherwise press Ctrl-C"
   read
-  docker-compose down $@
+  docker-compose down -v
 else
   printf "Press ENTER if you want to stop and forcefully remove $@ along with any any anonymous volumes attached, otherwise press Ctrl-C"
   read
+  docker-compose down -v $@
 fi
