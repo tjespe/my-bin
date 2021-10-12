@@ -1,0 +1,2 @@
+#!/bin/bash
+curl https://api.macaddress.io/v1\?apiKey\=at_fjI89NFI4D52Nc3GhzUENwpDkel2h\&output\=json\&search\=$1 | prettier --stdin-filepath oui.json

@@ -24,8 +24,10 @@ def get_container_key_from_config():
     parsed = yaml.safe_load(outs)
 
     for key, config in parsed["services"].items():
-        if "manage.py" and "runserver" in config.get("command", ""):
+        cmd = str(config.get("command", ""))
+        if "manage.py" in cmd and "runserver" in cmd:
             return key
+    raise Exception(f"Could not find manage.py and runserver in either of the service commands: {[config.get('command') for config in parsed['services'].values()]}")
 
 def get_container_key_from_cache():
     try:
