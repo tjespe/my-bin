@@ -1,0 +1,9 @@
+#!/bin/bash
+if [ $# -eq 0 ]; then
+  # Unpause all
+  docker-compose unpause $(docker-compose ps | grep -o ".\+Paused" | grep -o "^\S\+")
+else
+  # Unpause arguments
+  docker-compose unpause $@
+fi
+
