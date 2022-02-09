@@ -3,7 +3,7 @@
 
 RED='\033[1;31m'
 NC='\033[0m'
-OUTPUT="$(git diff --stat `git hash-object -t tree /dev/null` | tail -n 1)"
+OUTPUT="$(git diff --stat `git hash-object -t tree /dev/null` $@ | tail -n 1)"
 if [ `uname` = "Darwin" ]; then
   FILES="$(echo $OUTPUT | grep -o "\d\+" | head -1)"
   LINES="$(echo $OUTPUT | grep -o "\d\+" | tail -1)"
