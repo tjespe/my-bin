@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /tmp
+curl https://$GITHUB_MASTER_KEY@raw.githubusercontent.com/tjespe/master/master/Code/optuna/optuna.db --output optuna.db && \
+  optuna-dashboard sqlite:///optuna.db
