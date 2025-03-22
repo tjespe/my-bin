@@ -37,7 +37,6 @@ df_full["Debetkto"], df_full["Kreditkto"] = zip(*df_full.apply(map_accounts, axi
 
 # Create new accounting format DataFrame
 accounting_df = pd.DataFrame()
-accounting_df["#"] = range(1, len(df_full) + 1)
 accounting_df["Dato"] = df_full["Bokføringsdag"]
 
 # Handle 'Inn' and 'Ut'
@@ -59,6 +58,34 @@ accounting_df["Detaljer"] = "-"
 accounting_df["Referanse"] = df_full.get("Verifikationsnummer", "")
 accounting_df["Notater"] = ""
 accounting_df["Korteier"] = ""
+
+# Merge together rows with same date and accounts
+mergeable = ["PLATTFORMAVG KORR", "TILBAKEBET. FOND AVG"]
+
+mask = df_full["Transaksjonstype"].isin(mergeable)
+df_merge = accounting_df[mask]
+df_rest = accounting_df[~mask]
+
+df_agg = df_merge.groupby(["Dato", "Debetkto", "Kreditkto"], as_index=False).agg(
+    {
+        "Inn": "sum",
+        "Ut": "sum",
+        "Motpart": lambda x: ", ".join(x.dropna().unique()),
+        "Beskrivelse": lambda x: ", ".join(x.dropna().unique()),
+        "Kategori": "first",
+        "Bilag": "first",
+        "Detaljer": "first",
+        "Referanse": lambda x: ", ".join(x.dropna().astype(str).unique()),
+        "Notater": "first",
+        "Korteier": "first",
+    }
+)
+
+accounting_df = pd.concat([df_rest, df_agg], ignore_index=True)
+accounting_df = accounting_df.sort_values(
+    by=["Dato", "Debetkto", "Kreditkto"]
+).reset_index(drop=True)
+accounting_df.insert(0, "#", range(1, len(accounting_df) + 1))
 
 print("Head of accounting df:")
 display(accounting_df.set_index("#").head())
