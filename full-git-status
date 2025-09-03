@@ -1,8 +1,9 @@
 #!/usr/bin/env zsh
 source ~/.zshrc
-cd ~/Git
+root=$(pwd)
+cd $root
 for dir in *; do
   cd "$dir"; echo; echo; python -c "print('$dir:'.ljust(40), end='')"
   git remote get-url origin && git fetch origin && git diff --name-only "origin/$(current_branch)" | cat || git status
-  cd ~/Git
+  cd $root
 done

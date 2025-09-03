@@ -1,4 +1,4 @@
 #!/bin/bash 
 for arg in $@; do
-  echo $arg >> "$(git rev-parse --show-toplevel)/.gitignore"
+  echo $arg >> ".gitignore"
 done
