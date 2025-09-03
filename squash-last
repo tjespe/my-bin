@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+for app in $(git show HEAD --name-only | grep api/ | grep -o "apps/[^\/]\+" | uniq | grep -o "\w\+$"); do
+  first=$(git show HEAD --name-only | grep api/ | grep $app| grep -o "\/\d\+" | grep -o "\d\+" | head -1)
+  last=$(git show HEAD --name-only | grep api/ | grep $app| grep -o "\/\d\+" | grep -o "\d\+" | tail -1)
+  echo "squash $app from $first to $last"
+  dcm squashmigrations $app $first $last
+done

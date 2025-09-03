@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+const Mathml2latex = require('mathml-to-latex');
+var fs = require("fs");
+var stdinBuffer = fs.readFileSync(process.stdin.fd);
+const mathml = stdinBuffer.toString();
+console.log(Mathml2latex.convert(mathml).replace(/[\(\)]/g, "."));

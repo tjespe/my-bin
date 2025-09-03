@@ -1,0 +1,27 @@
+#!/bin/bash
+WORKFLOW_ID=500760674
+DATE_KEY="2022-08"
+EXCLUDE_PATTERN="(Mysen|Hafslund)"
+COOKIE="SELVBETJENING-XSRF-TOKEN=4dacb5e50409431618547fac87334a1d4168b75a6490bcec6e56599a8ee3; SELVBETJENING-XSRF-TOKEN-HTTPONLY=4dacb5e50409431618547fac87334a1d4168b75a6490bcec6e56599a8ee3; TS01c05a7b=01165c59e786f2f35700562388827b9c24c680bceebd75782be9b43a7fb1102b4cada65783b92ebe9d196f5b015b1ccd70ddad256c; amlbcookie=01; iPlanetDirectoryProOAM=SrJhiWRYid3TY2yUqaJ8cG0ZRqQ.*AAJTSQACMDIAAlNLABw2a0FjSFpVSERUdjhQUS9qK2tYaE9UL0hqdlU9AAR0eXBlAANDVFMAAlMxAAIwMQ..*; TS012f4073=01709944296ccbeee2efae7bf4bf730b2e7850b537ca6a7b126d353e723e8acfe86800d74dfeb55bfea8baa559056ce161db5f23f8e2a8b14e6e0df731a85bf6dce485a3b58924c4a52dd550ed1a31e22116aeeecd3cd6a6cf24d52484553a277f31317b61e4989ac4f9bba6796a04b8a369ea34fb16ebfbe4c05a50083e30f8fa70826a7964256b0b7f4ffe8a08c697da5b9d386b4db6ea8afbdd7e10b0be3f36fa8b4c58bdd05dba176f39af6b17ce5d237b9e367ebc394e711f77e37eb047fe2bc3fe97; SVVSecurityTokenIdporten=eyJ0eXAiOiJKV1QiLCJraWQiOiJ4cTF1ejA4TndCanVtVWN0TlhXNUtWS0d2czA9IiwiYWxnIjoiUlMyNTYifQ%2EeyJhdF9oYXNoIjoibUJMbG1yb1B0SlhvMXdDb1IzM2QxQSIsInN1YiI6IjA1MDUwMDgzMzY3IiwiYXVkaXRUcmFja2luZ0lkIjoiZWQ5ZmJhMTEtYTBhYi00NmE3LWFiMWYtNDBiMjk1MmQzZTFlLTQyMzI0MDQ1MiIsImlzcyI6Imh0dHBzOi8vd3d3LnZlZ3Zlc2VuLm5vOjQ0My9vcGVuYW0vb2F1dGgyL25vcmdlLm5vIiwidG9rZW5OYW1lIjoiaWRfdG9rZW4iLCJhdWQiOiJzdnYtZGluc2lkZWYtOTRkNmRiNjQtMTdkMS00Yzc5LThjZjItM2FjNDdjZGE4ZTRhIiwiY19oYXNoIjoiek9kVzZTS21ucU5QdDZudUxENEZKUSIsImFjciI6IkxldmVsNCIsInVpZCI6IjA1MDUwMDgzMzY3Iiwib3JnLmZvcmdlcm9jay5vcGVuaWRjb25uZWN0Lm9wcyI6Imt2TWtfb0E0MnR4ekpHMVp4YkZyanJ5TVl5WSIsInNfaGFzaCI6IjFiZGlrMkZRS2U1QlI1QjVsb2RGMkEiLCJhenAiOiJzdnYtZGluc2lkZWYtOTRkNmRiNjQtMTdkMS00Yzc5LThjZjItM2FjNDdjZGE4ZTRhIiwiYXV0aF90aW1lIjoxNjYwMTQzNjc3LCJyZWFsbSI6Ii9ub3JnZS5ubyIsInNjb3BlcyI6WyJvcGVuaWQiLCJzY29wZXMiLCJkaW5zaWRlIl0sImV4cCI6MTY2MDE3MjQ3NywidG9rZW5UeXBlIjoiSldUVG9rZW4iLCJpYXQiOjE2NjAxNDM2Nzd9%2EmIctSiUBKl8Aot%2DhuGeVsSPbEW7zg6qquLf3ZoZ8SMPqs3d4tle0807%5F2WzVjPE2J3ysy9Oikg%2DA73IKoVIThvHEZ7xGy3e0A%5FBP%2DVpafTxpNzRDa2VSa01lrk2qgCr68s%2DjRSStkvpsYgGWTOwBXs6q%5FT40EDmvxs3o%5FkKPw1nAWtCiYFilscOVe%5FYyAvR8f8yGs%2D1esx6USzz5cv%2DJJrcJc18U31G%2D0BLv2HQB8ewkLeuni7qKrDR%2DeOKAsIgla01aHhXVynMDCnX1%5Fz7onP9TghPyGQy75GWlpvtcu72AXnzALE5CiIG9UoZW6XArMdRAQ5Cv1qccf7sKkXgRpw; TS0113d9ba=0170994429f2abecffbb1171b6f5717324f4789c6eca6a7b126d353e723e8acfe86800d74dfeb55bfea8baa559056ce161db5f23f8e2a8b14e6e0df731a85bf6dce485a3b58924c4a52dd550ed1a31e22116aeeecd8de1724595a9dd6c8c004c2f823a75a7eb43b016977f06e704580e0a153951e3f5a9339382d85f07646b1d087b8075ba0b3ed36b8f3eda2dd73ae59bfe2cbca5"
+
+
+while true; do for id in 061 151 051 671 031 141 631 161 071 621 081; do
+echo $id;
+curl "https://forerett-adapter.atlas.vegvesen.no/provetimer?v=2&arbeidsflytId=$WORKFLOW_ID&klasse=B&trafikkstasjonId=$id" \
+  -H 'Accept: */*' \
+  -H 'Accept-Language: en-US,en;q=0.9,nb;q=0.8,nb-NO;q=0.7,nn;q=0.6,no;q=0.5' \
+  -H 'Connection: keep-alive' \
+  -H "Cookie: $COOKIE" \
+  -H 'DNT: 1' \
+  -H 'Origin: https://www.vegvesen.no' \
+  -H 'Referer: https://www.vegvesen.no/' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: same-site' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36' \
+  -H 'sec-ch-ua: ".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  --compressed | grep "$DATE_KEY" | grep -v "$EXCLUDE_PATTERN" && echo 
+done
+done
