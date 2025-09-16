@@ -1,0 +1,17 @@
+#!/usr/bin/env python3
+import requests
+from astral import LocationInfo
+from astral.sun import sun
+from datetime import date, datetime
+import pytz
+
+# get location from IP
+resp = requests.get("http://ip-api.com/json/").json()
+lat, lon, city, country = resp["lat"], resp["lon"], resp["city"], resp["country"]
+
+# build astral location
+loc = LocationInfo(city, country, resp["timezone"], lat, lon)
+s = sun(loc.observer, date.today(), tzinfo=loc.timezone)
+
+print(s["sunset"].strftime("%H:%M"))
+

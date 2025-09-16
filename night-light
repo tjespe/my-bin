@@ -1,0 +1,27 @@
+#!/bin/bash
+# Usage: night-light X   where 0 <= X <= 1
+#    or: night-light     for automatic adjustment based on time
+
+if [ -z "$1" ]; then
+  echo "Auto-adjusting since no strength was provided"
+  exec night-light-auto
+fi
+
+STRENGTH="$1"
+
+# clamp between 0 and 1
+if (( $(echo "$STRENGTH < 0" | bc -l) )); then STRENGTH=0; fi
+if (( $(echo "$STRENGTH > 1" | bc -l) )); then STRENGTH=1; fi
+
+# Define gamma scaling
+# Red stays 1.0
+# Green/Blue reduced depending on strength
+GAMMA_R=1.0
+GAMMA_G=$(echo "1.0 - 0.5 * $STRENGTH" | bc -l)
+GAMMA_B=$(echo "1.0 - 0.8 * $STRENGTH" | bc -l)
+
+# Pick your output (change eDP-1 if needed: run `xrandr` to see)
+OUTPUT="eDP-1"
+
+xrandr --output "$OUTPUT" --gamma $GAMMA_R:$GAMMA_G:$GAMMA_B
+

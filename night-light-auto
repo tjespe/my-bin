@@ -1,0 +1,42 @@
+#!/bin/bash
+# night-light-cron: compute strength from current time and call night-light
+
+# --- CONFIG ---
+START_TIME=$(sunset) # when effect starts (0 strength here)
+MAX_TIME="00:00"     # when effect reaches maximum
+MAX_LEVEL=0.8        # maximum effect strength
+# ---------------
+
+# convert HH:MM to minutes since midnight
+to_minutes () {
+  H=$(echo "$1" | cut -d: -f1)
+  M=$(echo "$1" | cut -d: -f2)
+  echo $((10#$H * 60 + 10#$M))
+}
+
+START=$(to_minutes "$START_TIME")
+MAX=$(to_minutes "$MAX_TIME")
+
+HOUR=$(date +%H)
+MIN=$(date +%M)
+NOW=$((10#$HOUR * 60 + 10#$MIN))
+
+# handle midnight wrap (e.g. 16:00 → 00:00)
+if [ $MAX -le $START ]; then
+  MAX=$((MAX + 1440))
+  if [ $NOW -lt $START ]; then
+    NOW=$((NOW + 1440))
+  fi
+fi
+
+if [ $NOW -lt $START ]; then
+  STRENGTH=0
+elif [ $NOW -ge $MAX ]; then
+  STRENGTH=$MAX_LEVEL
+else
+  ELAPSED=$((NOW - START))
+  DURATION=$((MAX - START))
+  STRENGTH=$(echo "scale=3; $MAX_LEVEL * $ELAPSED / $DURATION" | bc -l)
+fi
+
+night-light "$STRENGTH"
