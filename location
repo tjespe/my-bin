@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+import os, json, requests
+from datetime import datetime, timedelta
+
+CACHE_FILE = os.path.expanduser("~/.cache/location.json")
+TTL_HOURS = 24
+
+def fetch_location():
+    resp = requests.get("http://ip-api.com/json/").json()
+    return {
+        "lat": resp["lat"],
+        "lon": resp["lon"],
+        "city": resp["city"],
+        "country": resp["country"],
+        "timezone": resp["timezone"],
+        "fetched_at": datetime.utcnow().isoformat(),
+    }
+
+def load_cache():
+    if not os.path.exists(CACHE_FILE):
+        return None
+    try:
+        with open(CACHE_FILE) as f:
+            data = json.load(f)
+        ts = datetime.fromisoformat(data["fetched_at"])
+        if datetime.utcnow() - ts > timedelta(hours=TTL_HOURS):
+            return None
+        return data
+    except Exception:
+        return None
+
+def save_cache(data):
+    os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
+    with open(CACHE_FILE, "w") as f:
+        json.dump(data, f)
+
+def get_location():
+    """Return dict with lat, lon, city, country, timezone."""
+    loc = load_cache()
+    if loc is None:
+        try:
+            loc = fetch_location()
+            save_cache(loc)
+        except Exception:
+            if os.path.exists(CACHE_FILE):
+                with open(CACHE_FILE) as f:
+                    loc = json.load(f)
+            else:
+                raise RuntimeError("No cached location and unable to fetch.")
+    return loc
+
+if __name__ == "__main__":
+    loc = get_location()
+    print(loc["city"]+", "+loc["country"])
+

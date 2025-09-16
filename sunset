@@ -5,12 +5,17 @@ from astral.sun import sun
 from datetime import date, datetime
 import pytz
 
-# get location from IP
-resp = requests.get("http://ip-api.com/json/").json()
-lat, lon, city, country = resp["lat"], resp["lon"], resp["city"], resp["country"]
+import sys, os
+
+# add the directory of this script to sys.path (necessary to import location)
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, SCRIPT_DIR)
+
+from location import get_location
 
 # build astral location
-loc = LocationInfo(city, country, resp["timezone"], lat, lon)
+loc_data = get_location()
+loc = LocationInfo(loc_data["city"], loc_data["country"], loc_data["timezone"], loc_data["lat"], loc_data["lon"])
 s = sun(loc.observer, date.today(), tzinfo=loc.timezone)
 
 print(s["sunset"].strftime("%H:%M"))
