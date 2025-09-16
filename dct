@@ -1,4 +1,4 @@
 #!/bin/bash
-docker-compose up -d es01 es02
+# docker-compose up -d es01 es02
 dcde up
 dcde pytest --reuse-db -vvv -s $@

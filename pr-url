@@ -1,0 +1,2 @@
+#!/bin/bash
+gh pr view -q .url --json url | cat
